@@ -13,8 +13,7 @@ func createUser(c *gin.Context) {
 		return
 	}
 
-	query := `INSERT INTO users (name, email) VALUES (:name, :email)`
-	result, err := db.NamedExec(query, &user)
+	result, err := createUserDB(user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
