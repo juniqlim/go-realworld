@@ -36,15 +36,14 @@ func init() {
 	defer func() { db = originalDB }() // 테스트 후 원래 DB로 복원
 }
 
+var repo = userDBRepository(testDB)
+
 func TestCreateUserDB(t *testing.T) {
 	user := User{
 		Name:  "John Doe",
 		Email: "johndoe@example.com",
 	}
 
-	result, _ := createUserDB(user)
-	lastInsertID, _ := result.LastInsertId()
-	assert.True(t, lastInsertID > 0)
-	rowsAffected, _ := result.RowsAffected()
-	assert.Equal(t, int64(1), rowsAffected)
+	result, _ := repo.CreateUser(user)
+	assert.True(t, result.ID > 0)
 }
