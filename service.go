@@ -26,23 +26,21 @@ func createUser(c *gin.Context) {
 
 // getUsers - 모든 사용자 조회
 func getUsers(c *gin.Context) {
-	var users []User
-	err := db.Select(&users, "SELECT * FROM users")
+	result, err := getUsersDB()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, users)
+	c.JSON(http.StatusOK, result)
 }
 
 // getUserByID - ID로 사용자 조회
 func getUserByID(c *gin.Context) {
 	id := c.Param("id")
-	var user User
-	err := db.Get(&user, "SELECT * FROM users WHERE id = ?", id)
+	result, err := getUserByIDDB(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, result)
 }

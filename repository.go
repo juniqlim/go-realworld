@@ -34,3 +34,15 @@ func createUserDB(user User) (sql.Result, error) {
 	query := `INSERT INTO users (name, email) VALUES (:name, :email)`
 	return db.NamedExec(query, &user)
 }
+
+func getUsersDB() ([]User, error) {
+	var users []User
+	err := db.Select(&users, "SELECT * FROM users")
+	return users, err
+}
+
+func getUserByIDDB(id string) (User, error) {
+	var user User
+	err := db.Get(&user, "SELECT * FROM users WHERE id = ?", id)
+	return user, err
+}
