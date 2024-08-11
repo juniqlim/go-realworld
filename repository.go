@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"github.com/jmoiron/sqlx"
 	"log"
 )
@@ -41,9 +40,15 @@ func userDBRepository(db *sqlx.DB) UserRepository {
 }
 
 // CreateUser 메서드 구현
-func (r *UserDBRepository) CreateUser(user User) (sql.Result, error) {
+func (r *UserDBRepository) CreateUser(user User) (User, error) {
 	query := `INSERT INTO users (name, email) VALUES (:name, :email)`
-	return r.db.NamedExec(query, &user)
+	result, err := r.db.NamedExec(query, &user)
+	if err != nil {
+		return user, err
+	}
+	id, err := result.LastInsertId()
+	user.ID = int(id)
+	return user, err
 }
 
 // GetUsers 메서드 구현

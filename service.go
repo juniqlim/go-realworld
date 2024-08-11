@@ -2,10 +2,7 @@ package main
 
 // createUser - 사용자 생성
 func createUser(user User, repo UserRepository) (User, error) {
-	result, err := repo.CreateUser(user)
-	id, _ := result.LastInsertId()
-	user.ID = int(id)
-	return user, err
+	return repo.CreateUser(user)
 }
 
 // getUsers - 모든 사용자 조회
