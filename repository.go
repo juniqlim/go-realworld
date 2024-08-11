@@ -30,19 +30,32 @@ func init() {
 	log.Println("테이블 생성 성공!")
 }
 
-func createUserDB(user User) (sql.Result, error) {
-	query := `INSERT INTO users (name, email) VALUES (:name, :email)`
-	return db.NamedExec(query, &user)
+type UserDBRepository struct {
+	db *sqlx.DB
 }
 
-func getUsersDB() ([]User, error) {
+func userDBRepository(db *sqlx.DB) UserRepository {
+	return &UserDBRepository{
+		db: db,
+	}
+}
+
+// CreateUser 메서드 구현
+func (r *UserDBRepository) CreateUser(user User) (sql.Result, error) {
+	query := `INSERT INTO users (name, email) VALUES (:name, :email)`
+	return r.db.NamedExec(query, &user)
+}
+
+// GetUsers 메서드 구현
+func (r *UserDBRepository) GetUsers() ([]User, error) {
 	var users []User
-	err := db.Select(&users, "SELECT * FROM users")
+	err := r.db.Select(&users, "SELECT * FROM users")
 	return users, err
 }
 
-func getUserByIDDB(id string) (User, error) {
+// GetUserByID 메서드 구현
+func (r *UserDBRepository) GetUserByID(id string) (User, error) {
 	var user User
-	err := db.Get(&user, "SELECT * FROM users WHERE id = ?", id)
+	err := r.db.Get(&user, "SELECT * FROM users WHERE id = ?", id)
 	return user, err
 }
