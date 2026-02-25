@@ -12,3 +12,8 @@ type UserRepository interface {
 	GetUsers() ([]User, error)
 	GetUserByID(id string) (User, error)
 }
+
+type Article struct {
+	title   string
+	content string
+}
